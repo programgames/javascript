@@ -30,14 +30,12 @@ var metier ={
 				getVille : function(){
 					return this.ville;
 				},
-				getHtml :function(){
+				getHtml : function (){
 					return this.rue+ "<br>"+this.codePostal+ " "+ this.ville;
-				},
+				}
 			};
 		},
 	createPersonne : function (nom, prenom) {
-	
-	
 		return{
 			"nom": nom,
 			"prenom" :prenom,
@@ -46,10 +44,37 @@ var metier ={
 				this.nom=nom;
 				this.prenom=prenom
 			},
-			ajoutAdresse: function(adresse){
+			ajoutAdresse : function(adresse){
 			this.adresse.push(adresse);
 			},
-			getHtml :function(){
+			supprimerAdresse : function(adr){
+				for(var i=0;i<this.adresse.length;i++){
+					if(this.adresse[i].getRue()==adr.getRue()){
+						if(this.adresse[i].getCodePostal()==adr.getCodePostal()){
+							if(this.adresse[i].getVille()==	adr.getVille()){
+								this.adresse.splice(i,1);
+								return true;							
+							}					
+						}				
+					}
+				}
+				return false;
+			},
+			searchAdresse : function ( rue, codePostal ,ville ) {
+				var car=1;
+				for(var i=0;i<this.adresse.length;i++){
+					if(this.adresse[i].getRue()==rue){
+						if(this.adresse[i].getCodePostal()==codePostal){
+							if(this.adresse[i].getVille()==	ville){
+								car=2;								
+								return this.adresse[i];							
+							}					
+						}				
+					}
+				}
+				return -1;	
+			},
+			getHtml : function () {
 				var maVar = this.nom + " " +this.prenom +" : <br/>";
 					
 				for (var i=0;i<this.adresse.length;i++) {
@@ -59,16 +84,35 @@ var metier ={
 					maVar+=this.adresse[i].getHtml();
 					}
 				return maVar;
-			}	
+			}
 		};	
 	},
-	getHtmlObj : function ( objet ){
+	getHtmlObj : function (objet){
 		return objet.getHtml();
 	}	
 }
 var moi=metier.createPersonne("Matthias", "gaydu");
 moi.ajoutAdresse(metier.createAddress("30 rue des boules",63200,"riom"));
+moi.ajoutAdresse(metier.createAddress("31 rue des boules",63200,"riom"));
+var adresse=moi.searchAdresse("30 rue des boules",63200,"riom");
+if(adresse==-1){
+	var codeHtmlL="<p> l'adresse n'existe pas </p>";
+}
+else{
+	var codeHtmlL="<p>"+ adresse.getHtml()+"</p>";
+}
+var adresse2=moi.searchAdresse("36 rue des boules",63200,"riom");
+if(adresse2==-1){
+	var codeHtmlO="<p> l'adresse n'existe pas </p>";
+}
+else{
+	var codeHtmlO="<p>"+ adresse.getHtml()+"</p>";
+}
 var testAdresse="<p>"+metier.getHtmlObj(metier.createAddress("30 rue de boules",63200,"riom"))+"<br/>"+metier.getHtmlObj(metier.createAddress("45 allée des peupliers",35145,"monCul"))+"</p>";
 var codeHtml="<p>"+metier.getHtmlObj(moi)+"</p>";
+moi.supprimerAdresse(metier.createAddress("31 rue des boules",63200,"riom"));
+var codeHtmlf="<p>"+metier.getHtmlObj(moi)+"</p>";
 document.getElementById("paragrapheTP").innerHTML =codeHtml;
-	
+document.getElementById("paragrapheTP2").innerHTML =codeHtmlL;
+document.getElementById("paragrapheTP3").innerHTML =codeHtmlO;
+document.getElementById("paragrapheTP4").innerHTML =codeHtmlf;
