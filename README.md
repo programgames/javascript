@@ -1,2 +1,2 @@
 # javascript
-tp de GAREN
+Projet tutorée
